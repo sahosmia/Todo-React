@@ -8,6 +8,7 @@ const useTodayDate = () => {
 
   today = mm + "/" + dd + "/" + yyyy;
 
+  // console.log(today);
   return [today];
 };
 

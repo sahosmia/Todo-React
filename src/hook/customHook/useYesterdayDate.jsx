@@ -4,14 +4,15 @@ const useYesterdayDate = () => {
    var prevDay = new Date(day);
    prevDay.setDate(day.getDate() - 1);
 
-   var date = new Date(prevDay);
-   var dd = String(date.getDate()).padStart(2, "0");
-   var mm = String(date.getMonth() + 1).padStart(2, "0"); //January is 0!
-   var yyyy = date.getFullYear();
+   var yesterday_date = new Date(prevDay);
+   var dd = String(yesterday_date.getDate()).padStart(2, "0");
+   var mm = String(yesterday_date.getMonth() + 1).padStart(2, "0"); //January is 0!
+   var yyyy = yesterday_date.getFullYear();
 
-   date = mm + "/" + dd + "/" + yyyy;
+   yesterday_date = mm + "/" + dd + "/" + yyyy;
 
-   return [date];
+   console.log(yesterday_date);
+   return [yesterday_date];
 };
 
 export default useYesterdayDate;

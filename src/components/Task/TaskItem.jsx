@@ -1,47 +1,85 @@
-import { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
-import style from './style/TaskItem.module.css';
+import PropTypes from "prop-types";
+import { useContext, useReducer, useState } from "react";
+import { Link } from "react-router-dom";
 import { Trash, Edit, Star } from "react-feather";
-import { DataContext } from '../../hook/dataContext';
-import useTodayDate from '../../hook/customHook/useTodayDate';
-import useTommoroDate from '../../hook/customHook/useTommoroDate';
-import useYesterdayDate from '../../hook/customHook/useYesterDayDate';
-import UpdateModal from '../Modal/UpdateModal';
 
+import { DataContext } from "../../hook/dataContext";
+import useTodayDate from "../../hook/customHook/useTodayDate";
+import useTommoroDate from "../../hook/customHook/useTommoroDate";
+import useYesterdayDate from "../../hook/customHook/useYesterDayDate";
 
+import style from "./style/TaskItem.module.css";
+import UpdateModal from "../Modal/UpdateModal";
 
 function TaskItem({ task }) {
   const { tasks, setTasks } = useContext(DataContext);
-  const [isComplete, setIsComplete] = useState(task.status);
-  const [isImportant, setIsImportant] = useState(task.important);
-      const [isUpdateModal, setUpdateModal] = useState(false);
   // custom hooks
   const [today] = useTodayDate();
   const [tommoro] = useTommoroDate();
   const [yesterday] = useYesterdayDate();
 
+  const reducer = (state, action) => {
+    if (action.type === "Complete") {
+      return {
+        ...state,
+        isComplete: true,
+      };
+    }
+
+    if (action.type === "Delete") {
+      return {
+        ...state,
+      };
+    }
+
+    if (action.type === "Important") {
+      return {
+        ...state,
+        isImportant: !state.isImportant,
+      };
+    }
+
+    if (action.type === "UpdateModal") {
+      return {
+        ...state,
+        isUpdateModal: action.payload,
+      };
+    }
+  };
+
+  const [taskState, dispatch] = useReducer(reducer, {
+    isComplete: task.status,
+    isImportant: task.important,
+    isUpdateModal: false,
+  });
+
   function handleComplete(id) {
-    setIsComplete(!isComplete);
     setTasks(
-      tasks.map((el) => (el.id === id ? { ...el, status: !isComplete } : el))
+      tasks.map((el) =>
+        el.id === id ? { ...el, status: !taskState.isComplete } : el
+      )
     );
+    dispatch({ type: "Complete", payload: id });
   }
 
   function handleDelete(id) {
     const newTasks = tasks.filter((task) => task.id !== id);
     setTasks(newTasks);
+    dispatch({ type: "Delete", payload: id });
   }
 
   function handleImportant(id) {
-    setIsImportant(!isImportant);
     setTasks(
       tasks.map((el) =>
-        el.id === id ? { ...el, important: !isImportant } : el
+        el.id === id ? { ...el, important: !taskState.isImportant } : el
       )
     );
+
+    dispatch({ type: "Important", payload: id });
   }
+
   function handleUpdateModal(status) {
-    setUpdateModal(status);
+    dispatch({ type: "UpdateModal", payload: status });
   }
 
   const getTime = (time) => {
@@ -70,15 +108,13 @@ function TaskItem({ task }) {
     return timeDate;
   };
 
-
-
   return (
     <>
-      <div className={isComplete ? style.taskComplete : style.task}>
+      <div className={taskState.isComplete ? style.taskComplete : style.task}>
         <div>
           <input
             type="checkbox"
-            checked={isComplete}
+            checked={taskState.isComplete}
             name="status"
             onChange={() => handleComplete(task.id)}
           />
@@ -90,17 +126,37 @@ function TaskItem({ task }) {
         <div>
           <Trash onClick={() => handleDelete(task.id)} />
           <Edit onClick={handleUpdateModal} />
-          <Star
-            style={{ color: isImportant && "red" }}
-            onClick={() => handleImportant(task.id)}
-          />
+
+          <div
+            title={
+              taskState.isImportant
+                ? "Remove from Important"
+                : "Add To Imporant"
+            }
+            className=""
+          >
+            <Star
+              style={{ color: taskState.isImportant && "red" }}
+              onClick={() => handleImportant(task.id)}
+            />
+          </div>
         </div>
       </div>
-      {isUpdateModal && (
+      {taskState.isUpdateModal && (
         <UpdateModal task={task} onGetModal={handleUpdateModal} />
       )}
     </>
   );
 }
 
-export default TaskItem
+TaskItem.propTypes = {
+  task: PropTypes.shape({
+    id: PropTypes.any,
+    important: PropTypes.any,
+    status: PropTypes.any,
+    time: PropTypes.any,
+    title: PropTypes.any,
+  }),
+};
+
+export default TaskItem;

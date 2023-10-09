@@ -9,12 +9,12 @@ export default function Navbar({status, onGetModal}) {
   
   return (
     <>
-      <Link className="navbar-brand" to={"/"}>
-        Navbar
+      <Link className="navbar-brand" to="/">
+        Sahos Todo
       </Link>
 
       <div>
-        <button onClick={handleModalShow}><Plus/> Add New Task</button>
+        <button className="" onClick={handleModalShow}><Plus/> Add New Task</button>
       </div>
     </>
   );

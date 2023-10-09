@@ -7,6 +7,7 @@ const useUpdateDateFormate = (d) => {
     var yyyy = time.getFullYear();
 
     time = yyyy + "-" + mm + "-" + dd;
+    console.log(time);
     return [time];
   }
   time = "";

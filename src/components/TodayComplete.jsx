@@ -2,11 +2,11 @@ import { useContext } from "react";
 import TaskItem from "../components/Task/TaskItem";
 import { DataContext } from "../hook/dataContext";
 import useTodayDate from "../hook/customHook/useTodayDate";
+import { HeadingTitle } from "./HeadingTitle";
 
 function TodayComplete() {
-  const { tasks, setTasks } = useContext(DataContext);
-    const [today] = useTodayDate();
-    
+  const { tasks } = useContext(DataContext);
+  const [today] = useTodayDate();
 
   const completedTasks = tasks.filter(
     (task) => task.status === true && task.time === today
@@ -14,10 +14,13 @@ function TodayComplete() {
 
   return (
     <>
-      <h4 className="title mt_2">Completed ({completedTasks.length})</h4>
+      <HeadingTitle
+        length={completedTasks.length}
+        title="Completed"
+      ></HeadingTitle>
 
       {completedTasks.map((task) => (
-        <TaskItem key={task.id} task={task}/>
+        <TaskItem key={task.id} task={task} />
       ))}
     </>
   );
