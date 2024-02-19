@@ -1,6 +1,5 @@
 import GroupTaskList from "../components/GroupTaskList";
 
-
 function Completed() {
   return (
     <>

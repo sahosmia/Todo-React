@@ -17,9 +17,16 @@ body {
   background: #f1f1f1 !important;
 }
 
+svg {
+    width: 18px;
+}
+svg:hover {
+    cursor: pointer;
+}
+
 
 .active {
-    color: orange;
+   @apply text-orange-600;
 }
 
 .page{
@@ -30,10 +37,7 @@ header {
     @apply fixed top-0 left-0 bg-white p-5 shadow mb-20 z-10 flex gap-12 items-center w-full;
 }
 
-header div button {
-    @apply flex items-center justify-center text-white rounded-sm gap-1 cursor-pointer bg-indigo-700 py-3 px-6;
 
-}
 
 main{
     @apply mt-20;
@@ -72,12 +76,7 @@ footer {
 }
 
 
-.alignItemCenter{
-    align-items: center;
-}
-.justifyBetween{
-    justify-content: space-between;
-}
+
 .mt_2{
     margin-top: 2rem;
 }
